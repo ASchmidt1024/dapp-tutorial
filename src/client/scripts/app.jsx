@@ -2,27 +2,21 @@ import React from 'react';
 import {Bond, TimeBond} from 'oo7';
 import {Rspan} from 'oo7-react';
 import {InputBond} from 'parity-reactive-ui';
-
-const computeColor = t => t.match(/^[0-9]+$/) ? {color: 'red'} : {color: 'black'}
-const format = ([msg, t]) => `${new Date(t)}: ${msg}`
+import {bonds, formatBlockNumber, formatBalance} from 'oo7-parity';
 
 export class App extends React.Component {
-	constructor() {
-		super();
-		this.bond = new Bond();
-		this.time = new TimeBond();
-	}
+
 	render() {
 		return (
 			<div>
-				<InputBond
-					bond={this.bond}
-					placeholder="Go ahead and type some text"
-				/>
-				<Rspan
-					style={this.bond.map(computeColor)}
-				>
-					{Bond.all([this.bond, this.time]).map(format)}
+				Default account:&nbsp;
+				<Rspan>{bonds.me}</Rspan>&nbsp;
+				<br/>Given the name of&nbsp;<Rspan>
+					{bonds.accountsInfo[bonds.me].name}
+				</Rspan>
+				<br/>With a balance of&nbsp;
+				<Rspan>
+					{bonds.balance(bonds.me).map(formatBalance)}
 				</Rspan>
 			</div>
 		);
