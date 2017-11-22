@@ -1,21 +1,25 @@
 import React from 'react';
 import {Bond, TimeBond} from 'oo7';
 import {Rspan, Rimg} from 'oo7-react';
-import {InputBond, HashBond} from 'parity-reactive-ui';
+import {InputBond, HashBond, BButton} from 'parity-reactive-ui';
 import {bonds, formatBlockNumber, formatBalance, GitHubHintABI} from 'oo7-parity';
 
 export class App extends React.Component {
 	constructor() {
 		super();
-		this.bond = new Bond;
-		this.GithubHint = bonds.makeContract(bonds.registry.lookupAddress('githubhint', 'A'), GitHubHintABI);
+		this.gavofyork = bonds.registry.lookupAddress('gavofyork', 'A');
 	}
 	render() {
 		return (
 			<div>
-				<InputBond bond={this.bond} placeholder='Name' />
-				<Rimg src={this.GithubHint.entries(bonds.registry.lookupData(this.bond, 'IMG'))[0]} /> 
-				<Rspan>{this.GithubHint.entries(bonds.registry.lookupData(this.bond, 'IMG'))[0]}</Rspan>
+				My balance: <Rspan>
+					{bonds.balance(bonds.me).map(formatBalance)}
+				</Rspan>
+				<br />
+				<BButton
+					content='Give gavofyork 100 Finney'
+					onClick={() => bonds.post({to: this.gavofyork, value: 100 * 1e12})}
+				/>
 			</div>
 		);
 	}
